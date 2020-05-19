@@ -40,6 +40,21 @@ body{background-color: #000000;}
 .boardRow{
   display: flex;
 }
-.checkerboard{ width: 44.7%; margin: 30% auto 30% auto; border:1px solid #ffffff;}
-.blackcels{width: 50px; height: 50px; background-color: #000000;}
-.whitecels{width: 50px; height: 50px; background-color: #ffffff;}
+.checkerboardMain{width: 26.8%; margin: 10% auto 10% auto;}
+.checkerboard{  border:1px solid #ffffff;}
+.blackcels{width: 50px; height: 50px; background-color: #000000; padding: 5px 0 0 0;}
+.whitecels{width: 50px; height: 50px; background-color: #ffffff; padding: 5px 0 0 0;}
+
+
+.circle{width: 45px; height: 45px;  border-radius: 100%; margin: 0 auto 0 auto;}
+.cube{width: 45px; height: 45px; border-radius: 0!important; margin: 0 auto 0 auto;}
+.circlecolorred{background-color: #f30303;}
+.circlecolorblack{background-color: #000000;}
+
+.change_button_block{
+  background-color: #ffffff;
+  width: 300px;
+  height: 100px;
+  margin: 0 auto 0 auto;
+  display: flex;
+}
