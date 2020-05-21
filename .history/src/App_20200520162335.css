@@ -1,0 +1,61 @@
+body{background-color: #000000;}
+.App {
+  text-align: center;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+.boardRow{
+  display: flex;
+}
+.checkerboardMain{width: 26.8%; margin: 10% auto 10% auto;}
+.checkerboard{  border:1px solid #ffffff;}
+.blackcels{width: 50px; height: 50px; background-color: #000000; padding: 5px 0 0 0;}
+.whitecels{width: 50px; height: 50px; background-color: #ffffff; padding: 5px 0 0 0;}
+
+
+.circle{width: 45px; height: 45px;  border-radius: 100%; margin: 0 auto 0 auto;}
+.cube{width: 45px; height: 45px; border-radius: 0!important; margin: 0 auto 0 auto;}
+.circlecolorred{background-color: #f30303;}
+.circlepurple{background-color: purple;}
+.circlecolorblack{background-color: #000000;}
+
+.change_button_block{
+  background-color: #ffffff;
+  width: 300px;
+  height: 100px;
+  margin: 0 auto 0 auto;
+  display: flex;
+}
