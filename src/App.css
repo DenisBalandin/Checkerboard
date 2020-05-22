@@ -49,14 +49,31 @@ body{background-color: #000000;}
 .circle{width: 45px; height: 45px;  border-radius: 100%; margin: 0 auto 0 auto;}
 .cube{width: 45px; height: 45px; border-radius: 0!important; margin: 0 auto 0 auto;}
 .circlecolorred{background-color: #f30303;}
-#circlepurple{background-color: purple;}
+#circlepurple{background-color:yellow;}
 .circlecolorblack{background-color: #000000;}
-.movecell{background-color: royalblue;width: 50px; height: 50px; position: absolute;}
+.movecell{border: royalblue 3px solid; width: 45px; height: 50px; margin: -5px 0 0 0; position: absolute;}
 
 .change_button_block{
   background-color: #ffffff;
-  width: 300px;
+  width: 400px;
   height: 100px;
-  margin: 0 auto 0 auto;
+  margin: 20px auto 0 auto;
   display: flex;
+}
+.ChangeCollor p{
+  margin: 0px 0 0 0;
+}
+.ChangeShape p{
+  margin: 0px 0 0 0;
+}
+.change_button_block div{
+
+  margin: 0 10px 0 10px;
+
+
+}
+.buttons div{
+  margin: 5px 0 5px 0;
+  border: 1px solid #000000;
+  cursor: pointer;
 }

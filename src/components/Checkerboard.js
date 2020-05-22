@@ -6,10 +6,12 @@ class Checkeredboard extends Component{
         this.state ={
             startArray:[],
             matrixArray:[],
+            baseMatrix:[],
+            baseStartArray:[],
             circletop:'circle circlecolorred',
             circletdown:'circle circlecolorblack',
-            color: '',
-            shape:'',
+            color: 'circlecolorred',
+            shape:'circle',
             shapeMove:[{id:1,piece:3,type:0}],
             cellMove:[{idleft:'',idrighr:''}],
             nextPlayer:2,
@@ -23,8 +25,8 @@ class Checkeredboard extends Component{
             color: event.target.value
         });
         this.setState({
-            circletop:'circle circlecolorred',
-            circletdown:'circle  circlecolorblack',
+            circletop:'circle '+event.target.value,
+            circletdown:'circle  '+event.target.value,
         })
       }
       handleChangeShape(event){
@@ -36,7 +38,8 @@ class Checkeredboard extends Component{
             circletdown:event.target.value+'  circlecolorred',
         })
     }
-    componentDidMount = () =>{
+    createStartArrays = () =>{
+        //Here I am create base array for main work and updeitng
         let n = 8 * 8;
         let finalArray = [];
         //I take n number of cells and use two loops 
@@ -60,32 +63,47 @@ class Checkeredboard extends Component{
                 }
             }
         }
-    //    console.log(JSON.parse(localStorage.getItem('saveGame')));
-     ///   if(this.state.newGame === 0){
-
-            // localStorage.setItem('saveGame',  JSON.stringify(finalArray));
-      //  }else{
-
         this.setState({
-            startArray:finalArray
+            baseStartArray:finalArray
+        });
+        if(this.state.newGame === 0){
+            this.setState({
+                startArray:JSON.parse(localStorage.getItem('startArray')),
+                newGame:1
+            });
+       }else{
+            this.setState({
+                startArray:finalArray
+            });
+       }
+       //Here I am create Matrix array for rendering in jsx
+       let matrixArray = [];
+       let midArray = [];
+       for(let i = 0; i < finalArray.length; i++){
+           if(i % 9 === 0 ){
+               matrixArray.push(midArray);
+               midArray = [];
+           }else{
+               midArray.push(finalArray[i]);
+           }
+       }
+        this.setState({
+            baseMatrix:matrixArray
         });
 
-        let matrixArray = [];
-        let midArray = [];
-        for(let i = 0; i < finalArray.length; i++){
-            if(i % 9 === 0 ){
-                matrixArray.push(midArray);
-                midArray = [];
-            }else{
-                midArray.push(finalArray[i]);
-            }
+       if(this.state.newGame === 0){
+            this.setState({
+               matrixArray:JSON.parse(localStorage.getItem('matrixArray')),
+               newGame:1
+            });
+        }else{
+            this.setState({
+               matrixArray:matrixArray
+            });
         }
-
-        console.log(JSON.parse(localStorage.getItem('matrixArray')));
-        this.setState({
-            matrixArray:matrixArray
-        });
-        console.log(finalArray);
+    }
+    componentDidMount = () =>{
+        this.createStartArrays();
     }
     deletShape = (id) =>{
         const itemsst = this.state.startArray;
@@ -111,7 +129,6 @@ class Checkeredboard extends Component{
         }
     }
     movetToShape = (id, type) =>{
-
         if(type === this.state.nextPlayer){
             if(id !== this.state.shapeMove.id ){
                 const itemsst = this.state.startArray;
@@ -131,9 +148,7 @@ class Checkeredboard extends Component{
             this.setState({
                 startArray: itemsst,
             }); 
-
             if(id !== this.state.shapeMove.id ){
-
                 console.log(this.state.shapeMove);
                 const itemsst = this.state.startArray;
                 const item = itemsst.find(item => item.id === id);
@@ -144,7 +159,6 @@ class Checkeredboard extends Component{
                     shapeMove:{id:id,piece:4,type:type}
                 }); 
             }
-
             if(type === 3){
                 let getMovecell = id - 9;
                 let idleft =  this.checkId(getMovecell-1);
@@ -162,40 +176,7 @@ class Checkeredboard extends Component{
                     cellMove:{idleft:idleft,idrighr:idrighr}
                 }); 
             }
-        }      
-    }
-    
-    moveCell = (id) =>{
-        const itemsst = this.state.startArray;
-        const item = itemsst.find(item => item.id === id);
-        const itemIndex = itemsst.indexOf(item);
-        itemsst[itemIndex]['piece'] = this.state.shapeMove.type;
-        var nextpl = 0;
-        if(this.state.shapeMove.type === 2){
-            nextpl = 3;
-        }else{
-            nextpl = 2;
-        }
-
-        this.setState({
-            startArray: itemsst,
-            shapeMove:{id:id,piece:this.state.shapeMove.piece,type:this.state.shapeMove.type},
-            cellMove:[{idleft:'',idrighr:''}],
-            nextPlayer:nextpl
-        }); 
-
-        this.deletShape(this.state.shapeMove.id);
-    }
-    saveGame = () =>{
-        // localStorage.setItem('startArray',  JSON.stringify(this.state.startArray));
-        localStorage.setItem('matrixArray',  JSON.stringify(this.state.matrixArray));
-
-        
-    }
-    LoadGame = () =>{    
-                if(this.state.newGame === 0){
-
-
+        }   
         let matrixArray = [];
         let midArray = [];
         for(let i = 0; i < this.state.startArray.length; i++){
@@ -210,8 +191,39 @@ class Checkeredboard extends Component{
             matrixArray:matrixArray
         });
     }
+    moveCell = (id) =>{
+        const itemsst = this.state.startArray;
+        const item = itemsst.find(item => item.id === id);
+        const itemIndex = itemsst.indexOf(item);
+        itemsst[itemIndex]['piece'] = this.state.shapeMove.type;
+        var nextpl = 0;
+        if(this.state.shapeMove.type === 2){
+            nextpl = 3;
+        }else{
+            nextpl = 2;
+        }
+        this.setState({
+            startArray: itemsst,
+            shapeMove:{id:id,piece:this.state.shapeMove.piece,type:this.state.shapeMove.type},
+            cellMove:[{idleft:'',idrighr:''}],
+            nextPlayer:nextpl
+        }); 
+        this.deletShape(this.state.shapeMove.id);
+    }
+    saveGame = () =>{
+        localStorage.setItem('startArray',  JSON.stringify(this.state.startArray));
+        localStorage.setItem('matrixArray',  JSON.stringify(this.state.matrixArray));
+    }
+    ResetGame = () =>{
+        this.createStartArrays();
 
- 
+        this.setState({
+            shapeMove:[{id:1,piece:3,type:0}],
+        });
+        localStorage.setItem('startArray',  JSON.stringify(this.state.baseStartArray));
+        localStorage.setItem('matrixArray',  JSON.stringify(this.state.baseMatrix));
+
+        this.createStartArrays();
     }
     render(){
         return(
@@ -224,64 +236,44 @@ class Checkeredboard extends Component{
                                     {a.id === this.state.cellMove.idleft ? <div className="movecell" onClick={this.moveCell.bind(this, a.id)}></div>: <div></div> }
                                     {a.id === this.state.cellMove.idrighr ? <div className="movecell" onClick={this.moveCell.bind(this, a.id)}></div>: <div></div> }
 
-                                   {a.piece === 2 ? <div className={this.state.circletop} onClick={this.movetToShape.bind(this,a.id,a.piece)}></div>:<div></div> } 
-                                   {a.piece === 3 ? <div className={this.state.circletdown} onClick={this.movetToShape.bind(this,a.id,a.piece)}></div>:<div></div> } 
-                                   {a.piece === 4 ? <div id="circlepurple" className={this.state.circletdown} onClick={this.movetToShape.bind(this,a.id)}></div>:<div></div> } 
+                                    {a.piece === 2 ? <div className={this.state.circletop} onClick={this.movetToShape.bind(this,a.id,a.piece)}></div>:<div></div> } 
+                                    {a.piece === 3 ? <div className={this.state.circletdown} onClick={this.movetToShape.bind(this,a.id,a.piece)}></div>:<div></div> } 
+                                    {a.piece === 4 ? <div id="circlepurple" className={this.state.circletdown} onClick={this.movetToShape.bind(this,a.id)}></div>:<div></div> } 
                                 </div> 
                                 : 
                                 <div className="whitecels">
                                     {a.id === this.state.cellMove.idleft ? <div className="movecell" onClick={this.moveCell.bind(this, a.id)}></div>: <div></div> }
                                     {a.id === this.state.cellMove.idrighr ? <div className="movecell" onClick={this.moveCell.bind(this, a.id)}></div>: <div></div> }
 
-                                   {a.piece === 2 ? <div className={this.state.circletop} onClick={this.movetToShape.bind(this,a.id,a.piece)}></div>:<div></div> } 
-                                   {a.piece === 3 ? <div className={this.state.circletdown} onClick={this.movetToShape.bind(this,a.id,a.piece)}></div>:<div></div> } 
-                                   {a.piece === 4 ? <div id="circlepurple" className={this.state.circletdown} onClick={this.movetToShape.bind(this,a.id)}></div>:<div></div> } 
-
+                                    {a.piece === 2 ? <div className={this.state.circletop} onClick={this.movetToShape.bind(this,a.id,a.piece)}></div>:<div></div> } 
+                                    {a.piece === 3 ? <div className={this.state.circletdown} onClick={this.movetToShape.bind(this,a.id,a.piece)}></div>:<div></div> } 
+                                    {a.piece === 4 ? <div id="circlepurple" className={this.state.circletdown} onClick={this.movetToShape.bind(this,a.id)}></div>:<div></div> } 
                                 </div>}
                             </div>
                         )}</div>
                     )}
                 </div>
                 <div className="change_button_block">
-                    {/* <div onClick={this.saveGame}>Save Game</div> */}
-                    {/* <div onClick={this.LoadGame}>Load Game</div> */}
-                    <div>Color</div>
-                    <div>
-                    <span>Red</span>
-                    <input
-                        type="radio"
-                        value="red"
-                        checked={this.state.color === "circlecolorred"}
-                        onChange={this.handleChange}
-                        />
-                        <br/>
+                    <div className="ChangeCollor">
+                        <p>Change color</p>   
                         <span>Black</span>
-                    <input
-                        type="radio"
-                        value="black"
-                        checked={this.state.color === "circlecolorblack"}
-                        onChange={this.handleChange}
-                        />
+                        <input type="radio"  value="circlecolorred" checked={this.state.color === "circlecolorred"} onChange={this.handleChange} /><br/>
+                        <span>Red</span>
+                        <input type="radio" value="circlecolorblack" checked={this.state.color === "circlecolorblack"} onChange={this.handleChange}/>
                     </div>
-                    <div>Shape</div>
-                    <div>
-                    <span>Circle</span>
-                    <input
-                        type="radio"
-                        value="circle"
-                        checked={this.state.shape === "circle"}
-                        onChange={this.handleChangeShape}
-                        />
-                        <br/>
-                        <span>box</span>
-                    <input
-                        type="radio"
-                        value="cube"
-                        checked={this.state.shape === "cube"}
-                        onChange={this.handleChangeShape}
-                        />
+                    <div className="ChangeShape">
+                        <p>Change shape</p>
+                        <span>Circle</span>
+                        <input type="radio" value="circle" checked={this.state.shape === "circle"} onChange={this.handleChangeShape}/><br/>
+                        <span>Cube</span>
+                        <input type="radio" value="cube" checked={this.state.shape === "cube"} onChange={this.handleChangeShape}/>
+                    </div>
+                    <div className="buttons">
+                        <div onClick={this.saveGame}>Save Game</div>
+                        <div onClick={this.ResetGame}>Reset Game</div>
                     </div>
                 </div>
+
             </div>
         )
     }
